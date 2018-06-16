@@ -9,6 +9,8 @@ import com.example.hyejin.serverpractice.model.SignUp_Data;
 import com.example.hyejin.serverpractice.model.Signup_ResponseData;
 import com.example.hyejin.serverpractice.model.User_Data;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,6 +78,27 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Signup_ResponseData> call, Throwable t) {
+                Log.e(TAG, "에러: " + t.getStackTrace());
+            }
+        });
+
+        Call<List<Signup_ResponseData>> call3 = APIRequestManager.getInstance().requestServer().aa();
+        call3.enqueue(new Callback<List<Signup_ResponseData>>() {
+            @Override
+            public void onResponse(Call<List<Signup_ResponseData>> call, Response<List<Signup_ResponseData>> response) {
+                if(response.code() == 200){
+                    List<Signup_ResponseData> result = response.body();
+
+                    for(int i=0; i<result.size(); i++){
+                        Log.d(TAG, "DB[" + i + "]_name: " + result.get(i).name);
+                    }
+                } else {
+                    Log.e(TAG, "에러 " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Signup_ResponseData>> call, Throwable t) {
                 Log.e(TAG, "에러: " + t.getStackTrace());
             }
         });
