@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.hyejin.serverpractice.api.APIRequestManager;
+import com.example.hyejin.serverpractice.model.SignUp_Data;
 import com.example.hyejin.serverpractice.model.Signup_ResponseData;
 import com.example.hyejin.serverpractice.model.User_Data;
 
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         P.user_data = new User_Data();
+        SignUpData.signUp_data = new SignUp_Data();
     }
 
     @Override
@@ -31,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
         P.user_data.name = "khj";
         P.user_data.passwd = "001010";
 
+        SignUpData.signUp_data.id = "akat32127";
+        SignUpData.signUp_data.passwd = "akat32!";
+
+        // 회원가입
+        /*
         Call<Signup_ResponseData> call = APIRequestManager.getInstance().requestServer().singup(P.user_data);
         call.enqueue(new Callback<Signup_ResponseData>() {
             @Override
@@ -50,6 +57,26 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<Signup_ResponseData> call, Throwable t) {
                 Log.e(TAG, "에러: " + t.getMessage());
                 t.printStackTrace();
+            }
+        });
+        */
+
+        Call<Signup_ResponseData> call2 = APIRequestManager.getInstance().requestServer().signin(SignUpData.signUp_data);
+        call2.enqueue(new Callback<Signup_ResponseData>() {
+            @Override
+            public void onResponse(Call<Signup_ResponseData> call, Response<Signup_ResponseData> response) {
+                if(response.code() == 200){
+                    Signup_ResponseData responseData = response.body();
+
+                    Log.d(TAG, "로그인 성공 : " + responseData.name + ", " + responseData._id);
+                } else {
+                    Log.e(TAG, "에러 " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Signup_ResponseData> call, Throwable t) {
+                Log.e(TAG, "에러: " + t.getStackTrace());
             }
         });
     }
